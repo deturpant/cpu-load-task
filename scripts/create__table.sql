@@ -2,4 +2,9 @@ CREATE TABLE IF NOT EXISTS cpu_load(
     id SERIAL PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL,
     value FLOAT NOT NULL
-)
+);
+CREATE TABLE IF NOT EXISTS log(
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    status VARCHAR(255) NOT NULL
+);

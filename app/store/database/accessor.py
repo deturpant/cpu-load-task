@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from aiohttp import web
+
 
 
 class PostgresAccessor:
@@ -15,7 +18,13 @@ class PostgresAccessor:
         await db.set_bind(self.config['database_url'])
         self.db = db
         application['db'] = self
+        async with self.db.transaction():
+            from app.cpu_load.models import Log
+            await Log.create(status="UP", timestamp=datetime.now())
 
     async def _on_disconnect(self, _) -> None:
         if self.db is not None:
+            async with self.db.transaction():
+                from app.cpu_load.models import Log
+                await Log.create(status="DOWN", timestamp=datetime.now())
             await self.db.pop_bind().close()

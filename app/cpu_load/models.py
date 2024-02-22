@@ -9,3 +9,11 @@ class CPULoad(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     value = db.Column(db.Float, nullable=False)
+
+
+class Log(db.Model):
+    __tablename__ = 'log'
+
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    status = db.Column(db.String(), nullable=False)
