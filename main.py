@@ -6,6 +6,11 @@ from app.config import config
 from app.store.database.models import database_accessor
 
 
+def setup_routes(application):
+    from app.cpu_load.routes import setup_routes as custom_setup_routes
+    custom_setup_routes(application)
+
+
 def setup_accessors(application):
     database_accessor.setup(application)
 
@@ -27,6 +32,7 @@ def setup_config(application):
 
 def setup_app(application):
     setup_config(application)
+    setup_routes(application)
     setup_accessors(application)
     application.on_startup.append(setup_background_tasks)
     application.on_cleanup.append(stop_background_tasks)

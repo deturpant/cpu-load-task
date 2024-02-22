@@ -9,7 +9,7 @@ class ListViewCPULoad(web.View):
         data = []
         for item in cpu_loads:
             data.append({
-                "timestamp": item.timestamp,
+                "timestamp": str(item.timestamp),
                 "value": item.value,
                 "id": item.id
             })

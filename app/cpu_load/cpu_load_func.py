@@ -15,6 +15,7 @@ async def save_cpu_load():
     while True:
         cpu_load = await get_cpu_load()
         async with database_accessor.db.transaction():
-            await CPULoad.create(value=cpu_load)
+            await CPULoad.create(value=cpu_load, timestamp=datetime.now())
         print(cpu_load)
         await asyncio.sleep(5)
+
