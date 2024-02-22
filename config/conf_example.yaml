@@ -1,0 +1,4 @@
+common:
+  port: 8081
+postgres:
+  database_url: postgres://user:pass@localhost/db_name
