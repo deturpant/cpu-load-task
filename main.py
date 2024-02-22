@@ -1,8 +1,14 @@
 from aiohttp import web
 
+from app.config import config
+
 
 def setup_app(application):
-    pass
+    setup_config(application)
+
+
+def setup_config(application):
+    application['config'] = config
 
 
 app = web.Application()
