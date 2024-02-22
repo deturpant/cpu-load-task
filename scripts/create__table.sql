@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS cpu_load(
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    value FLOAT NOT NULL
+)
