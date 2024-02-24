@@ -1,6 +1,13 @@
 from aiohttp import web
 
+from app.cpu_load.cpu_load_func import compute_average_load_per_minute
 from app.cpu_load.models import CPULoad
+
+
+class ListViewCPUPerMin(web.View):
+    async def get(self):
+        averages = await compute_average_load_per_minute()
+        return web.json_response(data={"cpu_loads": averages})
 
 
 class ListViewCPULoad(web.View):
