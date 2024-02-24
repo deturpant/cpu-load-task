@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import psutil
-from app.cpu_load.models import CPULoad
+from app.cpu_load.models import CPULoad, Log
 from app.store.database.models import database_accessor
 
 
@@ -50,3 +50,31 @@ async def compute_average_load_per_minute():
     return average_loads_per_minute
 
 
+async def get_program_status_changes_last_hour():
+    end_time = datetime.now()
+    start_time = end_time - timedelta(hours=1)
+
+    logs = await Log.query.where(
+        (Log.timestamp >= start_time) & (Log.timestamp <= end_time)
+    ).order_by(Log.timestamp).gino.all()
+
+    status_changes = []
+    prev_status = None
+    prev_timestamp = None
+    for log in logs:
+        if prev_status is None:
+            prev_status = log.status
+            prev_timestamp = log.timestamp
+            continue
+
+        if prev_status == 'DOWN' and log.status == 'UP':
+            status_changes.append(
+                (prev_timestamp.strftime('%Y-%m-%d %H:%M:%S'), log.timestamp.strftime('%Y-%m-%d %H:%M:%S')))
+
+        prev_status = log.status
+        prev_timestamp = log.timestamp
+
+    if prev_status == 'DOWN':
+        status_changes.append((prev_timestamp.strftime('%Y-%m-%d %H:%M:%S'), end_time.strftime('%Y-%m-%d %H:%M:%S')))
+
+    return status_changes

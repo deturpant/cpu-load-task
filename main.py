@@ -1,5 +1,5 @@
 import asyncio
-
+import aiohttp_cors
 from aiohttp import web
 
 from app.config import config
@@ -30,15 +30,29 @@ def setup_config(application):
     application['config'] = config
 
 
+def setup_cors(application):
+    for route in list(application.router.routes()):
+        cors.add(route)
+
+
 def setup_app(application):
     setup_config(application)
     setup_routes(application)
     setup_accessors(application)
+    setup_cors(application)
     application.on_startup.append(setup_background_tasks)
     application.on_cleanup.append(stop_background_tasks)
 
 
 app = web.Application()
+
+cors = aiohttp_cors.setup(app, defaults={
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers="*",
+        allow_headers="*"
+    )
+})
 
 if __name__ == '__main__':
     setup_app(app)

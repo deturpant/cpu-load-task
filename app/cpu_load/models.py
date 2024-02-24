@@ -8,7 +8,7 @@ class CPULoad(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-    value = db.Column(db.Float, nullable=False)
+    value = db.Column(db.Float, nullable=True)
 
 
 class Log(db.Model):
