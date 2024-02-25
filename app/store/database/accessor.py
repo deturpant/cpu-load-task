@@ -21,6 +21,7 @@ class PostgresAccessor:
         async with self.db.transaction():
             from app.cpu_load.models import Log, CPULoad
             curr_timestamp = datetime.now()
+            await CPULoad.create(value=0, timestamp=curr_timestamp)
             await Log.create(status="UP", timestamp=curr_timestamp)
 
     async def _on_disconnect(self, _) -> None:
@@ -28,5 +29,6 @@ class PostgresAccessor:
             async with self.db.transaction():
                 from app.cpu_load.models import Log, CPULoad
                 curr_timestamp = datetime.now()
+                await CPULoad.create(value=0, timestamp=curr_timestamp)
                 await Log.create(status="DOWN", timestamp=curr_timestamp)
             await self.db.pop_bind().close()
